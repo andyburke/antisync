@@ -1,7 +1,7 @@
 'use strict';
 
 var utils = require( './utils' );
-var nonsync = {
+var antisync = {
     mapSeries: require( './mapseries' ),
     eachSeries: require( './eachseries' )
 };
@@ -9,7 +9,7 @@ var nonsync = {
 module.exports = function series( tasks, callback ) {
     callback = callback || function() {};
     if ( utils.isArray( tasks ) ) {
-        nonsync.mapSeries( tasks, function( fn, callback ) {
+        antisync.mapSeries( tasks, function( fn, callback ) {
             if ( fn ) {
                 fn( function( err ) {
                     var args = Array.prototype.slice.call( arguments, 1 );
@@ -23,7 +23,7 @@ module.exports = function series( tasks, callback ) {
     }
     else {
         var results = {};
-        nonsync.eachSeries( utils.keys( tasks ), function( k, callback ) {
+        antisync.eachSeries( utils.keys( tasks ), function( k, callback ) {
             tasks[ k ]( function( err ) {
                 var args = Array.prototype.slice.call( arguments, 1 );
                 if ( args.length <= 1 ) {

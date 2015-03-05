@@ -1,6 +1,6 @@
 'use strict';
 
-var nonsync = {
+var antisync = {
     series: require( './series' )
 };
 
@@ -29,7 +29,7 @@ module.exports = function retry( times, task, callback ) {
         while ( times ) {
             attempts.push( retryAttempt( task, !( times -= 1 ) ) );
         }
-        nonsync.series( attempts, function( done, data ) {
+        antisync.series( attempts, function( done, data ) {
             data = data[ data.length - 1 ];
             ( wrappedCallback || callback )( data.err, data.result );
         } );

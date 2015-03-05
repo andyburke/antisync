@@ -1,11 +1,11 @@
 'use strict';
 
-var nonsync = {
+var antisync = {
     each: require( './each' )
 };
 
 module.exports = function every( arr, iterator, main_callback ) {
-    nonsync.each( arr, function( x, callback ) {
+    antisync.each( arr, function( x, callback ) {
         iterator( x, function( v ) {
             if ( !v ) {
                 main_callback( false );

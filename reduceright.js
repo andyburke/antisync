@@ -1,7 +1,7 @@
 'use strict';
 
 var utils = require( './utils' );
-var nonsync = {
+var antisync = {
     reduce: require( './reduce' )
 };
 
@@ -9,5 +9,5 @@ module.exports = function reduceRight( arr, memo, iterator, callback ) {
     var reversed = utils.map( arr, function( x ) {
         return x;
     } ).reverse();
-    nonsync.reduce( reversed, memo, iterator, callback );
+    antisync.reduce( reversed, memo, iterator, callback );
 };

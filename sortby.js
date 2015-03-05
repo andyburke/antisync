@@ -1,12 +1,12 @@
 'use strict';
 
 var utils = require( './utils' );
-var nonsync = {
+var antisync = {
     map: require( './map')
 };
 
 module.exports = function sortBy( arr, iterator, callback ) {
-    nonsync.map( arr, function( x, callback ) {
+    antisync.map( arr, function( x, callback ) {
         iterator( x, function( err, criteria ) {
             if ( err ) {
                 callback( err );

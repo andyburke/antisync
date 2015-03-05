@@ -1,14 +1,14 @@
 'use strict';
 
 var control = require( './control' );
-var nonsync = {
+var antisync = {
     each: require( './each' ),
     map: require( './map' )
 };
 
 module.exports = function parallel( tasks, callback ) {
     control.parallelApply( {
-        map: nonsync.map,
-        each: nonsync.each
+        map: antisync.map,
+        each: antisync.each
     }, tasks, callback );
 };

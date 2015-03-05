@@ -1,6 +1,6 @@
 'use strict';
 
-var nonsync = {
+var antisync = {
     queue: require( './queue' )
 };
 var timing = require( './timing' );
@@ -59,7 +59,7 @@ module.exports = function priorityQueue( worker, concurrency ) {
     }
 
     // Start with a normal queue
-    var q = nonsync.queue( worker, concurrency );
+    var q = antisync.queue( worker, concurrency );
 
     // Override push to accept second parameter representing priority
     q.push = function( data, priority, callback ) {

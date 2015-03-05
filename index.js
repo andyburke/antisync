@@ -1,79 +1,79 @@
 'use strict';
 
-var nonsync = module.exports = {};
+var antisync = module.exports = {};
 
 var timing = require( './timing' );
-nonsync.nextTick = timing.nextTick;
-nonsync.setImmediate = timing.setImmediate;
+antisync.nextTick = timing.nextTick;
+antisync.setImmediate = timing.setImmediate;
 
 var control = require( './control' );
-nonsync.iterator = control.iterator;
+antisync.iterator = control.iterator;
 
 var utils = require( './utils' );
-nonsync.log = utils.log;
-nonsync.dir = utils.dir;
+antisync.log = utils.log;
+antisync.dir = utils.dir;
 
-nonsync.each = nonsync.forEach = require( './each' );
-nonsync.eachLimit = nonsync.forEachLimit = require( './eachlimit' );
-nonsync.eachSeries = nonsync.forEachSeries = require( './eachseries' );
+antisync.each = antisync.forEach = require( './each' );
+antisync.eachLimit = antisync.forEachLimit = require( './eachlimit' );
+antisync.eachSeries = antisync.forEachSeries = require( './eachseries' );
 
-nonsync.map = require( './map' );
-nonsync.mapLimit = require( './maplimit' );
-nonsync.mapSeries = require( './mapseries' );
+antisync.map = require( './map' );
+antisync.mapLimit = require( './maplimit' );
+antisync.mapSeries = require( './mapseries' );
 
-nonsync.reduce = nonsync.foldl = nonsync.inject = require( './reduce' );
-nonsync.reduceRight = nonsync.foldr = require( './reduceright' );
+antisync.reduce = antisync.foldl = antisync.inject = require( './reduce' );
+antisync.reduceRight = antisync.foldr = require( './reduceright' );
 
-nonsync.filter = nonsync.select = require( './filter' );
-nonsync.filterSeries = nonsync.selectSeries = require( './filterseries' );
+antisync.filter = antisync.select = require( './filter' );
+antisync.filterSeries = antisync.selectSeries = require( './filterseries' );
 
-nonsync.reject = require( './reject' );
-nonsync.rejectSeries = require( './rejectseries' );
+antisync.reject = require( './reject' );
+antisync.rejectSeries = require( './rejectseries' );
 
-nonsync.detect = require( './detect' );
-nonsync.detectSeries = require( './detectseries' );
+antisync.detect = require( './detect' );
+antisync.detectSeries = require( './detectseries' );
 
-nonsync.some = nonsync.any = require( './some' );
-nonsync.every = nonsync.all = require( './every' );
+antisync.some = antisync.any = require( './some' );
+antisync.every = antisync.all = require( './every' );
 
-nonsync.sortBy = require( './sortby' );
+antisync.sortBy = require( './sortby' );
 
-nonsync.auto = require( './auto' );
+antisync.auto = require( './auto' );
 
-nonsync.retry = require( './retry' );
+antisync.retry = require( './retry' );
 
-nonsync.waterfall = require( './waterfall' );
+antisync.waterfall = require( './waterfall' );
 
-nonsync.parallel = require( './parallel' );
-nonsync.parallelLimit = require( './parallellimit' );
+antisync.parallel = require( './parallel' );
+antisync.parallelLimit = require( './parallellimit' );
 
-nonsync.series = require( './series' );
+antisync.series = require( './series' );
 
-nonsync.apply = require( './apply' );
+antisync.apply = require( './apply' );
 
-nonsync.concat = require( './concat' );
-nonsync.concatSeries = require( './concatseries' );
+antisync.concat = require( './concat' );
+antisync.concatSeries = require( './concatseries' );
 
-nonsync.whilst = require( './whilst' );
-nonsync.doWhilst = require( './dowhilst' );
-nonsync.until = require( './until' );
-nonsync.doUntil = require( './dountil' );
+antisync.whilst = require( './whilst' );
+antisync.doWhilst = require( './dowhilst' );
+antisync.until = require( './until' );
+antisync.doUntil = require( './dountil' );
 
-nonsync.queue = require( './queue' );
-nonsync.priorityQueue = require( './priorityqueue' );
+antisync.queue = require( './queue' );
+antisync.priorityQueue = require( './priorityqueue' );
 
-nonsync.cargo = require( './cargo' );
+antisync.cargo = require( './cargo' );
 
-nonsync.memoize = require( './memoize' );
-nonsync.unmemoize = require( './unmemoize' );
+antisync.memoize = require( './memoize' );
+antisync.unmemoize = require( './unmemoize' );
 
-nonsync.times = require( './times' );
-nonsync.timesSeries = require( './timesseries' );
+antisync.times = require( './times' );
+antisync.timesSeries = require( './timesseries' );
 
-nonsync.seq = require( './seq' );
-nonsync.compose = require( './compose' );
+antisync.seq = require( './seq' );
+antisync.compose = require( './compose' );
 
-nonsync.applyEach = require( './applyeach' );
-nonsync.applyEachSeries = require( './applyeachseries' );
+antisync.applyEach = require( './applyeach' );
+antisync.applyEachSeries = require( './applyeachseries' );
 
-nonsync.forever = require( './forever' );
+antisync.forever = require( './forever' );

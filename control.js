@@ -1,6 +1,6 @@
 'use strict';
 
-var nonsync = {
+var antisync = {
     each: require( './each' ),
     eachSeries: require( './eachseries' )
 };
@@ -52,7 +52,7 @@ control.limited = function limited( limit ) {
 control.parallel = function parallel( fn ) {
     return function() {
         var args = Array.prototype.slice.call( arguments );
-        return fn.apply( null, [ nonsync.each ].concat( args ) );
+        return fn.apply( null, [ antisync.each ].concat( args ) );
     };
 };
 
@@ -66,7 +66,7 @@ control.parallelLimit = function parallelLimit( limit, fn ) {
 control.series = function series( fn ) {
     return function() {
         var args = Array.prototype.slice.call( arguments );
-        return fn.apply( null, [ nonsync.eachSeries ].concat( args ) );
+        return fn.apply( null, [ antisync.eachSeries ].concat( args ) );
     };
 };
 

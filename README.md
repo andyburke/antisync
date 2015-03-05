@@ -1,10 +1,10 @@
-# nonsync.js
+# antisync.js
 
-[![Build Status via Travis CI](https://travis-ci.org/andyburke/nonsync.svg?branch=master)](https://travis-ci.org/andyburke/nonsync)
+[![Build Status via Travis CI](https://travis-ci.org/andyburke/antisync.svg?branch=master)](https://travis-ci.org/andyburke/antisync)
 
 ## WARNING
 
-** nonsync is an experimental fork of [async](https://github.com/caolan/async) **
+** antisync is an experimental fork of [async](https://github.com/caolan/async) **
 
 The intents are:
 

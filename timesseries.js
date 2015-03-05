@@ -1,6 +1,6 @@
 'use strict';
 
-var nonsync = {
+var antisync = {
     mapSeries: require( './mapseries' )
 };
 
@@ -9,5 +9,5 @@ module.exports = function timesSeries( count, iterator, callback ) {
     for ( var i = 0; i < count; i++ ) {
         counter.push( i );
     }
-    return nonsync.mapSeries( counter, iterator, callback );
+    return antisync.mapSeries( counter, iterator, callback );
 };

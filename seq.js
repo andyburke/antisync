@@ -1,6 +1,6 @@
 'use strict';
 
-var nonsync = {
+var antisync = {
     reduce: require( './reduce' )
 };
 
@@ -10,7 +10,7 @@ module.exports = function seq( /* functions... */) {
         var that = this;
         var args = Array.prototype.slice.call( arguments );
         var callback = args.pop();
-        nonsync.reduce( fns, args, function( newargs, fn, cb ) {
+        antisync.reduce( fns, args, function( newargs, fn, cb ) {
             fn.apply( that, newargs.concat( [ function() {
                 var err = arguments[ 0 ];
                 var nextargs = Array.prototype.slice.call( arguments, 1 );

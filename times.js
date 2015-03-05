@@ -1,6 +1,6 @@
 'use strict';
 
-var nonsync = {
+var antisync = {
     map: require( './map' )
 };
 
@@ -9,5 +9,5 @@ module.exports = function times( count, iterator, callback ) {
     for ( var i = 0; i < count; i++ ) {
         counter.push( i );
     }
-    return nonsync.map( counter, iterator, callback );
+    return antisync.map( counter, iterator, callback );
 };

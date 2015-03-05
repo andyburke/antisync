@@ -1,9 +1,9 @@
 'use strict';
 
-var nonsync = {
+var antisync = {
     seq: require( './seq' )
 };
 
 module.exports = function compose( /* functions... */) {
-    return nonsync.seq.apply( null, Array.prototype.reverse.call( arguments ) );
+    return antisync.seq.apply( null, Array.prototype.reverse.call( arguments ) );
 };

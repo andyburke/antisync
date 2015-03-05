@@ -2,7 +2,7 @@
 /* jshint -W069 */
 'use strict';
 
-var nonsync = require( '../' );
+var antisync = require( '../' );
 
 if ( !Function.prototype.bind ) {
     Function.prototype.bind = function( thisArg ) {
@@ -79,11 +79,11 @@ exports[ 'forever' ] = function( test ) {
         if ( counter === 50 ) {
             return callback( 'too big!' );
         }
-        nonsync.setImmediate( function() {
+        antisync.setImmediate( function() {
             callback();
         } );
     }
-    nonsync.forever( addOne, function( err ) {
+    antisync.forever( addOne, function( err ) {
         test.equal( err, 'too big!' );
         test.done();
     } );
@@ -113,7 +113,7 @@ exports[ 'applyEach' ] = function( test ) {
             cb( null, 3 );
         }, 150 );
     };
-    nonsync.applyEach( [ one, two, three ], 5, function() {
+    antisync.applyEach( [ one, two, three ], 5, function() {
         test.same( call_order, [ 'two', 'one', 'three' ] );
         test.done();
     } );
@@ -143,7 +143,7 @@ exports[ 'applyEachSeries' ] = function( test ) {
             cb( null, 3 );
         }, 150 );
     };
-    nonsync.applyEachSeries( [ one, two, three ], 5, function() {
+    antisync.applyEachSeries( [ one, two, three ], 5, function() {
         test.same( call_order, [ 'one', 'two', 'three' ] );
         test.done();
     } );
@@ -173,7 +173,7 @@ exports[ 'applyEach partial application' ] = function( test ) {
             cb( null, 3 );
         }, 150 );
     };
-    nonsync.applyEach( [ one, two, three ] )( 5, function() {
+    antisync.applyEach( [ one, two, three ] )( 5, function() {
         test.same( call_order, [ 'two', 'one', 'three' ] );
         test.done();
     } );
@@ -199,7 +199,7 @@ exports[ 'compose' ] = function( test ) {
             cb( null, n + 1 );
         }, 100 );
     };
-    var add2mul3add1 = nonsync.compose( add1, mul3, add2 );
+    var add2mul3add1 = antisync.compose( add1, mul3, add2 );
     add2mul3add1( 3, function( err, result ) {
         if ( err ) {
             return test.done( err );
@@ -231,7 +231,7 @@ exports[ 'compose error' ] = function( test ) {
             cb( null, n + 1 );
         }, 100 );
     };
-    var add2mul3add1 = nonsync.compose( add1, mul3, add2 );
+    var add2mul3add1 = antisync.compose( add1, mul3, add2 );
     add2mul3add1( 3, function( err ) {
         test.equal( err, testerr );
         test.done();
@@ -256,7 +256,7 @@ exports[ 'compose binding' ] = function( test ) {
             cb( null, n * 3 );
         }, 15 );
     };
-    var add2mul3 = nonsync.compose( mul3, add2 );
+    var add2mul3 = antisync.compose( mul3, add2 );
     add2mul3.call( testcontext, 3, function( err, result ) {
         if ( err ) {
             return test.done( err );
@@ -287,7 +287,7 @@ exports[ 'seq' ] = function( test ) {
             cb( null, n + 1 );
         }, 100 );
     };
-    var add2mul3add1 = nonsync.seq( add2, mul3, add1 );
+    var add2mul3add1 = antisync.seq( add2, mul3, add1 );
     add2mul3add1( 3, function( err, result ) {
         if ( err ) {
             return test.done( err );
@@ -319,7 +319,7 @@ exports[ 'seq error' ] = function( test ) {
             cb( null, n + 1 );
         }, 100 );
     };
-    var add2mul3add1 = nonsync.seq( add2, mul3, add1 );
+    var add2mul3add1 = antisync.seq( add2, mul3, add1 );
     add2mul3add1( 3, function( err ) {
         test.equal( err, testerr );
         test.done();
@@ -344,7 +344,7 @@ exports[ 'seq binding' ] = function( test ) {
             cb( null, n * 3 );
         }, 15 );
     };
-    var add2mul3 = nonsync.seq( add2, mul3 );
+    var add2mul3 = antisync.seq( add2, mul3 );
     add2mul3.call( testcontext, 3, function( err, result ) {
         if ( err ) {
             return test.done( err );
@@ -357,7 +357,7 @@ exports[ 'seq binding' ] = function( test ) {
 
 exports[ 'auto' ] = function( test ) {
     var callOrder = [];
-    nonsync.auto( {
+    antisync.auto( {
             task1: [ 'task2', function( callback ) {
                 setTimeout( function() {
                     callOrder.push( 'task1' );
@@ -397,7 +397,7 @@ exports[ 'auto' ] = function( test ) {
 
 exports[ 'auto petrify' ] = function( test ) {
     var callOrder = [];
-    nonsync.auto( {
+    antisync.auto( {
             task1: [ 'task2', function( callback ) {
                 setTimeout( function() {
                     callOrder.push( 'task1' );
@@ -427,7 +427,7 @@ exports[ 'auto petrify' ] = function( test ) {
 
 exports[ 'auto results' ] = function( test ) {
     var callOrder = [];
-    nonsync.auto( {
+    antisync.auto( {
             task1: [ 'task2', function( callback, results ) {
                 test.same( results.task2, 'task2' );
                 setTimeout( function() {
@@ -467,14 +467,14 @@ exports[ 'auto results' ] = function( test ) {
 
 
 exports[ 'auto empty object' ] = function( test ) {
-    nonsync.auto( {}, function() {
+    antisync.auto( {}, function() {
         test.done();
     } );
 };
 
 exports[ 'auto error' ] = function( test ) {
     test.expect( 1 );
-    nonsync.auto( {
+    antisync.auto( {
             task1: function( callback ) {
                 callback( 'testerror' );
             },
@@ -493,7 +493,7 @@ exports[ 'auto error' ] = function( test ) {
 };
 
 exports[ 'auto no callback' ] = function( test ) {
-    nonsync.auto( {
+    antisync.auto( {
         task1: function( callback ) {
             callback();
         },
@@ -505,7 +505,7 @@ exports[ 'auto no callback' ] = function( test ) {
 };
 
 exports[ 'auto error should pass partial results' ] = function( test ) {
-    nonsync.auto( {
+    antisync.auto( {
             task1: function( callback ) {
                 callback( false, 'result1' );
             },
@@ -524,10 +524,10 @@ exports[ 'auto error should pass partial results' ] = function( test ) {
         } );
 };
 
-// Issue 24 on github: https://github.com/caolan/nonsync/issues#issue/24
-// Issue 76 on github: https://github.com/caolan/nonsync/issues#issue/76
+// Issue 24 on github: https://github.com/caolan/async/issues#issue/24
+// Issue 76 on github: https://github.com/caolan/async/issues#issue/76
 exports[ 'auto removeListener has side effect on loop iterator' ] = function( test ) {
-    nonsync.auto( {
+    antisync.auto( {
         task1: [ 'task3', function() {
             test.done();
         } ],
@@ -538,7 +538,7 @@ exports[ 'auto removeListener has side effect on loop iterator' ] = function( te
     } );
 };
 
-// Issue 410 on github: https://github.com/caolan/nonsync/issues/410
+// Issue 410 on github: https://github.com/caolan/async/issues/410
 exports[ 'auto calls callback multiple times' ] = function( test ) {
     if ( typeof process === 'undefined' ) {
         // node only test
@@ -554,7 +554,7 @@ exports[ 'auto calls callback multiple times' ] = function( test ) {
         }
     } );
     domain.run( function() {
-        nonsync.auto( {
+        antisync.auto( {
                 task1: function( callback ) {
                     callback( null );
                 },
@@ -579,9 +579,9 @@ exports[ 'auto calls callback multiple times' ] = function( test ) {
     }, 10 );
 };
 
-// Issue 462 on github: https://github.com/caolan/nonsync/issues/462
+// Issue 462 on github: https://github.com/caolan/async/issues/462
 exports[ 'auto modifying results causes final callback to run early' ] = function( test ) {
-    nonsync.auto( {
+    antisync.auto( {
             task1: function( callback, results ) {
                 results.inserted = true;
                 callback( null, 'task1' );
@@ -604,7 +604,7 @@ exports[ 'auto modifying results causes final callback to run early' ] = functio
         } );
 };
 
-// Issue 306 on github: https://github.com/caolan/nonsync/issues/306
+// Issue 306 on github: https://github.com/caolan/async/issues/306
 exports[ 'retry when attempt succeeds' ] = function( test ) {
     var failed = 3;
     var callCount = 0;
@@ -616,7 +616,7 @@ exports[ 'retry when attempt succeeds' ] = function( test ) {
         if ( !failed ) callback( null, expectedResult );
         else callback( true ); // respond with error
     }
-    nonsync.retry( fn, function( err, result ) {
+    antisync.retry( fn, function( err, result ) {
         test.equal( callCount, 3, 'did not retry the correct number of times' );
         test.equal( result, expectedResult, 'did not return the expected result' );
         test.done();
@@ -633,7 +633,7 @@ exports[ 'retry when all attempts succeeds' ] = function( test ) {
         callCount++;
         callback( error + callCount, erroredResult + callCount ); // respond with indexed values
     }
-    nonsync.retry( times, fn, function( err, result ) {
+    antisync.retry( times, fn, function( err, result ) {
         test.equal( callCount, 3, "did not retry the correct number of times" );
         test.equal( err, error + times, "Incorrect error was returned" );
         test.equal( result, erroredResult + times, "Incorrect result was returned" );
@@ -646,12 +646,12 @@ exports[ 'retry as an embedded task' ] = function( test ) {
     var fooResults;
     var retryResults;
 
-    nonsync.auto( {
+    antisync.auto( {
         foo: function( callback, results ) {
             fooResults = results;
             callback( null, 'FOO' );
         },
-        retry: nonsync.retry( function( callback, results ) {
+        retry: antisync.retry( function( callback, results ) {
             retryResults = results;
             callback( null, retryResult );
         } )
@@ -665,7 +665,7 @@ exports[ 'retry as an embedded task' ] = function( test ) {
 exports[ 'waterfall' ] = function( test ) {
     test.expect( 6 );
     var call_order = [];
-    nonsync.waterfall( [
+    antisync.waterfall( [
         function( callback ) {
             call_order.push( 'fn1' );
             setTimeout( function() {
@@ -698,20 +698,20 @@ exports[ 'waterfall' ] = function( test ) {
 };
 
 exports[ 'waterfall empty array' ] = function( test ) {
-    nonsync.waterfall( [], function() {
+    antisync.waterfall( [], function() {
         test.done();
     } );
 };
 
 exports[ 'waterfall non-array' ] = function( test ) {
-    nonsync.waterfall( {}, function( err ) {
+    antisync.waterfall( {}, function( err ) {
         test.equals( err.message, 'First argument to waterfall must be an array of functions' );
         test.done();
     } );
 };
 
 exports[ 'waterfall no callback' ] = function( test ) {
-    nonsync.waterfall( [
+    antisync.waterfall( [
         function( callback ) {
             callback();
         },
@@ -722,9 +722,9 @@ exports[ 'waterfall no callback' ] = function( test ) {
     ] );
 };
 
-exports[ 'waterfall nonsync' ] = function( test ) {
+exports[ 'waterfall antisync' ] = function( test ) {
     var call_order = [];
-    nonsync.waterfall( [
+    antisync.waterfall( [
         function( callback ) {
             call_order.push( 1 );
             callback();
@@ -743,7 +743,7 @@ exports[ 'waterfall nonsync' ] = function( test ) {
 
 exports[ 'waterfall error' ] = function( test ) {
     test.expect( 1 );
-    nonsync.waterfall( [
+    antisync.waterfall( [
         function( callback ) {
             callback( 'error' );
         },
@@ -783,7 +783,7 @@ exports[ 'waterfall multiple callback calls' ] = function( test ) {
             };
         }
     ];
-    nonsync.waterfall( arr );
+    antisync.waterfall( arr );
 };
 
 exports[ 'waterfall call in another context' ] = function( test ) {
@@ -795,12 +795,12 @@ exports[ 'waterfall call in another context' ] = function( test ) {
 
     var vm = require( 'vm' );
     var sandbox = {
-        nonsync: nonsync,
+        antisync: antisync,
         test: test
     };
 
     var fn = "(" + ( function() {
-        nonsync.waterfall( [ function( callback ) {
+        antisync.waterfall( [ function( callback ) {
             callback();
         } ], function( err ) {
             if ( err ) {
@@ -816,7 +816,7 @@ exports[ 'waterfall call in another context' ] = function( test ) {
 
 exports[ 'parallel' ] = function( test ) {
     var call_order = [];
-    nonsync.parallel( [
+    antisync.parallel( [
             function( callback ) {
                 setTimeout( function() {
                     call_order.push( 1 );
@@ -845,7 +845,7 @@ exports[ 'parallel' ] = function( test ) {
 };
 
 exports[ 'parallel empty array' ] = function( test ) {
-    nonsync.parallel( [], function( err, results ) {
+    antisync.parallel( [], function( err, results ) {
         test.equals( err, null );
         test.same( results, [] );
         test.done();
@@ -853,7 +853,7 @@ exports[ 'parallel empty array' ] = function( test ) {
 };
 
 exports[ 'parallel error' ] = function( test ) {
-    nonsync.parallel( [
+    antisync.parallel( [
             function( callback ) {
                 callback( 'error', 1 );
             },
@@ -868,7 +868,7 @@ exports[ 'parallel error' ] = function( test ) {
 };
 
 exports[ 'parallel no callback' ] = function( test ) {
-    nonsync.parallel( [
+    antisync.parallel( [
         function( callback ) {
             callback();
         },
@@ -881,7 +881,7 @@ exports[ 'parallel no callback' ] = function( test ) {
 
 exports[ 'parallel object' ] = function( test ) {
     var call_order = [];
-    nonsync.parallel( getFunctionsObject( call_order ), function( err, results ) {
+    antisync.parallel( getFunctionsObject( call_order ), function( err, results ) {
         test.equals( err, null );
         test.same( call_order, [ 3, 1, 2 ] );
         test.same( results, {
@@ -895,7 +895,7 @@ exports[ 'parallel object' ] = function( test ) {
 
 exports[ 'parallel limit' ] = function( test ) {
     var call_order = [];
-    nonsync.parallelLimit( [
+    antisync.parallelLimit( [
             function( callback ) {
                 setTimeout( function() {
                     call_order.push( 1 );
@@ -925,7 +925,7 @@ exports[ 'parallel limit' ] = function( test ) {
 };
 
 exports[ 'parallel limit empty array' ] = function( test ) {
-    nonsync.parallelLimit( [], 2, function( err, results ) {
+    antisync.parallelLimit( [], 2, function( err, results ) {
         test.equals( err, null );
         test.same( results, [] );
         test.done();
@@ -933,7 +933,7 @@ exports[ 'parallel limit empty array' ] = function( test ) {
 };
 
 exports[ 'parallel limit error' ] = function( test ) {
-    nonsync.parallelLimit( [
+    antisync.parallelLimit( [
             function( callback ) {
                 callback( 'error', 1 );
             },
@@ -949,7 +949,7 @@ exports[ 'parallel limit error' ] = function( test ) {
 };
 
 exports[ 'parallel limit no callback' ] = function( test ) {
-    nonsync.parallelLimit( [
+    antisync.parallelLimit( [
         function( callback ) {
             callback();
         },
@@ -962,7 +962,7 @@ exports[ 'parallel limit no callback' ] = function( test ) {
 
 exports[ 'parallel limit object' ] = function( test ) {
     var call_order = [];
-    nonsync.parallelLimit( getFunctionsObject( call_order ), 2, function( err, results ) {
+    antisync.parallelLimit( getFunctionsObject( call_order ), 2, function( err, results ) {
         test.equals( err, null );
         test.same( call_order, [ 1, 3, 2 ] );
         test.same( results, {
@@ -982,12 +982,12 @@ exports[ 'parallel call in another context' ] = function( test ) {
     }
     var vm = require( 'vm' );
     var sandbox = {
-        nonsync: nonsync,
+        antisync: antisync,
         test: test
     };
 
     var fn = "(" + ( function() {
-        nonsync.parallel( [ function( callback ) {
+        antisync.parallel( [ function( callback ) {
             callback();
         } ], function( err ) {
             if ( err ) {
@@ -1003,7 +1003,7 @@ exports[ 'parallel call in another context' ] = function( test ) {
 
 exports[ 'series' ] = function( test ) {
     var call_order = [];
-    nonsync.series( [
+    antisync.series( [
             function( callback ) {
                 setTimeout( function() {
                     call_order.push( 1 );
@@ -1032,7 +1032,7 @@ exports[ 'series' ] = function( test ) {
 };
 
 exports[ 'series empty array' ] = function( test ) {
-    nonsync.series( [], function( err, results ) {
+    antisync.series( [], function( err, results ) {
         test.equals( err, null );
         test.same( results, [] );
         test.done();
@@ -1041,7 +1041,7 @@ exports[ 'series empty array' ] = function( test ) {
 
 exports[ 'series error' ] = function( test ) {
     test.expect( 1 );
-    nonsync.series( [
+    antisync.series( [
             function( callback ) {
                 callback( 'error', 1 );
             },
@@ -1057,7 +1057,7 @@ exports[ 'series error' ] = function( test ) {
 };
 
 exports[ 'series no callback' ] = function( test ) {
-    nonsync.series( [
+    antisync.series( [
         function( callback ) {
             callback();
         },
@@ -1070,7 +1070,7 @@ exports[ 'series no callback' ] = function( test ) {
 
 exports[ 'series object' ] = function( test ) {
     var call_order = [];
-    nonsync.series( getFunctionsObject( call_order ), function( err, results ) {
+    antisync.series( getFunctionsObject( call_order ), function( err, results ) {
         test.equals( err, null );
         test.same( results, {
             one: 1,
@@ -1090,12 +1090,12 @@ exports[ 'series call in another context' ] = function( test ) {
     }
     var vm = require( 'vm' );
     var sandbox = {
-        nonsync: nonsync,
+        antisync: antisync,
         test: test
     };
 
     var fn = "(" + ( function() {
-        nonsync.series( [ function( callback ) {
+        antisync.series( [ function( callback ) {
             callback();
         } ], function( err ) {
             if ( err ) {
@@ -1111,7 +1111,7 @@ exports[ 'series call in another context' ] = function( test ) {
 
 exports[ 'iterator' ] = function( test ) {
     var call_order = [];
-    var iterator = nonsync.iterator( [
+    var iterator = antisync.iterator( [
         function() {
             call_order.push( 1 );
         },
@@ -1138,7 +1138,7 @@ exports[ 'iterator' ] = function( test ) {
 };
 
 exports[ 'iterator empty array' ] = function( test ) {
-    var iterator = nonsync.iterator( [] );
+    var iterator = antisync.iterator( [] );
     test.equals( iterator(), undefined );
     test.equals( iterator.next(), undefined );
     test.done();
@@ -1146,7 +1146,7 @@ exports[ 'iterator empty array' ] = function( test ) {
 
 exports[ 'iterator.next' ] = function( test ) {
     var call_order = [];
-    var iterator = nonsync.iterator( [
+    var iterator = antisync.iterator( [
         function() {
             call_order.push( 1 );
         },
@@ -1171,7 +1171,7 @@ exports[ 'iterator.next' ] = function( test ) {
 
 exports[ 'each' ] = function( test ) {
     var args = [];
-    nonsync.each( [ 1, 3, 2 ], eachIterator.bind( this, args ), function() {
+    antisync.each( [ 1, 3, 2 ], eachIterator.bind( this, args ), function() {
         test.same( args, [ 1, 2, 3 ] );
         test.done();
     } );
@@ -1179,7 +1179,7 @@ exports[ 'each' ] = function( test ) {
 
 exports[ 'each extra callback' ] = function( test ) {
     var count = 0;
-    nonsync.each( [ 1, 3, 2 ], function( val, callback ) {
+    antisync.each( [ 1, 3, 2 ], function( val, callback ) {
         count++;
         callback();
         test.throws( callback );
@@ -1191,7 +1191,7 @@ exports[ 'each extra callback' ] = function( test ) {
 
 exports[ 'each empty array' ] = function( test ) {
     test.expect( 1 );
-    nonsync.each( [], function( x, callback ) {
+    antisync.each( [], function( x, callback ) {
         test.ok( false, 'iterator should not be called' );
         callback();
     }, function() {
@@ -1202,7 +1202,7 @@ exports[ 'each empty array' ] = function( test ) {
 
 exports[ 'each error' ] = function( test ) {
     test.expect( 1 );
-    nonsync.each( [ 1, 2, 3 ], function( x, callback ) {
+    antisync.each( [ 1, 2, 3 ], function( x, callback ) {
         callback( 'error' );
     }, function( err ) {
         test.equals( err, 'error' );
@@ -1211,17 +1211,17 @@ exports[ 'each error' ] = function( test ) {
 };
 
 exports[ 'each no callback' ] = function( test ) {
-    nonsync.each( [ 1 ], eachNoCallbackIterator.bind( this, test ) );
+    antisync.each( [ 1 ], eachNoCallbackIterator.bind( this, test ) );
 };
 
 exports[ 'forEach alias' ] = function( test ) {
-    test.strictEqual( nonsync.each, nonsync.forEach );
+    test.strictEqual( antisync.each, antisync.forEach );
     test.done();
 };
 
 exports[ 'eachSeries' ] = function( test ) {
     var args = [];
-    nonsync.eachSeries( [ 1, 3, 2 ], eachIterator.bind( this, args ), function() {
+    antisync.eachSeries( [ 1, 3, 2 ], eachIterator.bind( this, args ), function() {
         test.same( args, [ 1, 3, 2 ] );
         test.done();
     } );
@@ -1229,7 +1229,7 @@ exports[ 'eachSeries' ] = function( test ) {
 
 exports[ 'eachSeries empty array' ] = function( test ) {
     test.expect( 1 );
-    nonsync.eachSeries( [], function( x, callback ) {
+    antisync.eachSeries( [], function( x, callback ) {
         test.ok( false, 'iterator should not be called' );
         callback();
     }, function() {
@@ -1241,7 +1241,7 @@ exports[ 'eachSeries empty array' ] = function( test ) {
 exports[ 'eachSeries error' ] = function( test ) {
     test.expect( 2 );
     var call_order = [];
-    nonsync.eachSeries( [ 1, 2, 3 ], function( x, callback ) {
+    antisync.eachSeries( [ 1, 2, 3 ], function( x, callback ) {
         call_order.push( x );
         callback( 'error' );
     }, function( err ) {
@@ -1252,18 +1252,18 @@ exports[ 'eachSeries error' ] = function( test ) {
 };
 
 exports[ 'eachSeries no callback' ] = function( test ) {
-    nonsync.eachSeries( [ 1 ], eachNoCallbackIterator.bind( this, test ) );
+    antisync.eachSeries( [ 1 ], eachNoCallbackIterator.bind( this, test ) );
 };
 
 exports[ 'forEachSeries alias' ] = function( test ) {
-    test.strictEqual( nonsync.eachSeries, nonsync.forEachSeries );
+    test.strictEqual( antisync.eachSeries, antisync.forEachSeries );
     test.done();
 };
 
 exports[ 'eachLimit' ] = function( test ) {
     var args = [];
     var arr = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ];
-    nonsync.eachLimit( arr, 2, function( x, callback ) {
+    antisync.eachLimit( arr, 2, function( x, callback ) {
         setTimeout( function() {
             args.push( x );
             callback();
@@ -1276,7 +1276,7 @@ exports[ 'eachLimit' ] = function( test ) {
 
 exports[ 'eachLimit empty array' ] = function( test ) {
     test.expect( 1 );
-    nonsync.eachLimit( [], 2, function( x, callback ) {
+    antisync.eachLimit( [], 2, function( x, callback ) {
         test.ok( false, 'iterator should not be called' );
         callback();
     }, function() {
@@ -1288,7 +1288,7 @@ exports[ 'eachLimit empty array' ] = function( test ) {
 exports[ 'eachLimit limit exceeds size' ] = function( test ) {
     var args = [];
     var arr = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ];
-    nonsync.eachLimit( arr, 20, eachIterator.bind( this, args ), function() {
+    antisync.eachLimit( arr, 20, eachIterator.bind( this, args ), function() {
         test.same( args, arr );
         test.done();
     } );
@@ -1297,7 +1297,7 @@ exports[ 'eachLimit limit exceeds size' ] = function( test ) {
 exports[ 'eachLimit limit equal size' ] = function( test ) {
     var args = [];
     var arr = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ];
-    nonsync.eachLimit( arr, 10, eachIterator.bind( this, args ), function() {
+    antisync.eachLimit( arr, 10, eachIterator.bind( this, args ), function() {
         test.same( args, arr );
         test.done();
     } );
@@ -1305,7 +1305,7 @@ exports[ 'eachLimit limit equal size' ] = function( test ) {
 
 exports[ 'eachLimit zero limit' ] = function( test ) {
     test.expect( 1 );
-    nonsync.eachLimit( [ 0, 1, 2, 3, 4, 5 ], 0, function( x, callback ) {
+    antisync.eachLimit( [ 0, 1, 2, 3, 4, 5 ], 0, function( x, callback ) {
         test.ok( false, 'iterator should not be called' );
         callback();
     }, function() {
@@ -1319,7 +1319,7 @@ exports[ 'eachLimit error' ] = function( test ) {
     var arr = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ];
     var call_order = [];
 
-    nonsync.eachLimit( arr, 3, function( x, callback ) {
+    antisync.eachLimit( arr, 3, function( x, callback ) {
         call_order.push( x );
         if ( x === 2 ) {
             callback( 'error' );
@@ -1332,13 +1332,13 @@ exports[ 'eachLimit error' ] = function( test ) {
 };
 
 exports[ 'eachLimit no callback' ] = function( test ) {
-    nonsync.eachLimit( [ 1 ], 1, eachNoCallbackIterator.bind( this, test ) );
+    antisync.eachLimit( [ 1 ], 1, eachNoCallbackIterator.bind( this, test ) );
 };
 
 exports[ 'eachLimit synchronous' ] = function( test ) {
     var args = [];
     var arr = [ 0, 1, 2 ];
-    nonsync.eachLimit( arr, 5, function( x, callback ) {
+    antisync.eachLimit( arr, 5, function( x, callback ) {
         args.push( x );
         callback();
     }, function() {
@@ -1348,13 +1348,13 @@ exports[ 'eachLimit synchronous' ] = function( test ) {
 };
 
 exports[ 'forEachLimit alias' ] = function( test ) {
-    test.strictEqual( nonsync.eachLimit, nonsync.forEachLimit );
+    test.strictEqual( antisync.eachLimit, antisync.forEachLimit );
     test.done();
 };
 
 exports[ 'map' ] = function( test ) {
     var call_order = [];
-    nonsync.map( [ 1, 3, 2 ], mapIterator.bind( this, call_order ), function( err, results ) {
+    antisync.map( [ 1, 3, 2 ], mapIterator.bind( this, call_order ), function( err, results ) {
         test.same( call_order, [ 1, 2, 3 ] );
         test.same( results, [ 2, 6, 4 ] );
         test.done();
@@ -1363,7 +1363,7 @@ exports[ 'map' ] = function( test ) {
 
 exports[ 'map original untouched' ] = function( test ) {
     var a = [ 1, 2, 3 ];
-    nonsync.map( a, function( x, callback ) {
+    antisync.map( a, function( x, callback ) {
         callback( null, x * 2 );
     }, function( err, results ) {
         test.same( results, [ 2, 4, 6 ] );
@@ -1375,7 +1375,7 @@ exports[ 'map original untouched' ] = function( test ) {
 exports[ 'map without main callback' ] = function( test ) {
     var a = [ 1, 2, 3 ];
     var r = [];
-    nonsync.map( a, function( x, callback ) {
+    antisync.map( a, function( x, callback ) {
         r.push( x );
         callback( null );
         if ( r.length >= a.length ) {
@@ -1387,7 +1387,7 @@ exports[ 'map without main callback' ] = function( test ) {
 
 exports[ 'map error' ] = function( test ) {
     test.expect( 1 );
-    nonsync.map( [ 1, 2, 3 ], function( x, callback ) {
+    antisync.map( [ 1, 2, 3 ], function( x, callback ) {
         callback( 'error' );
     }, function( err ) {
         test.equals( err, 'error' );
@@ -1397,7 +1397,7 @@ exports[ 'map error' ] = function( test ) {
 
 exports[ 'mapSeries' ] = function( test ) {
     var call_order = [];
-    nonsync.mapSeries( [ 1, 3, 2 ], mapIterator.bind( this, call_order ), function( err, results ) {
+    antisync.mapSeries( [ 1, 3, 2 ], mapIterator.bind( this, call_order ), function( err, results ) {
         test.same( call_order, [ 1, 3, 2 ] );
         test.same( results, [ 2, 6, 4 ] );
         test.done();
@@ -1406,7 +1406,7 @@ exports[ 'mapSeries' ] = function( test ) {
 
 exports[ 'mapSeries error' ] = function( test ) {
     test.expect( 1 );
-    nonsync.mapSeries( [ 1, 2, 3 ], function( x, callback ) {
+    antisync.mapSeries( [ 1, 2, 3 ], function( x, callback ) {
         callback( 'error' );
     }, function( err ) {
         test.equals( err, 'error' );
@@ -1417,7 +1417,7 @@ exports[ 'mapSeries error' ] = function( test ) {
 
 exports[ 'mapLimit' ] = function( test ) {
     var call_order = [];
-    nonsync.mapLimit( [ 2, 4, 3 ], 2, mapIterator.bind( this, call_order ), function( err, results ) {
+    antisync.mapLimit( [ 2, 4, 3 ], 2, mapIterator.bind( this, call_order ), function( err, results ) {
         test.same( call_order, [ 2, 4, 3 ] );
         test.same( results, [ 4, 8, 6 ] );
         test.done();
@@ -1426,7 +1426,7 @@ exports[ 'mapLimit' ] = function( test ) {
 
 exports[ 'mapLimit empty array' ] = function( test ) {
     test.expect( 1 );
-    nonsync.mapLimit( [], 2, function( x, callback ) {
+    antisync.mapLimit( [], 2, function( x, callback ) {
         test.ok( false, 'iterator should not be called' );
         callback();
     }, function() {
@@ -1437,7 +1437,7 @@ exports[ 'mapLimit empty array' ] = function( test ) {
 
 exports[ 'mapLimit limit exceeds size' ] = function( test ) {
     var call_order = [];
-    nonsync.mapLimit( [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ], 20, mapIterator.bind( this, call_order ), function( err, results ) {
+    antisync.mapLimit( [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ], 20, mapIterator.bind( this, call_order ), function( err, results ) {
         test.same( call_order, [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ] );
         test.same( results, [ 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 ] );
         test.done();
@@ -1446,7 +1446,7 @@ exports[ 'mapLimit limit exceeds size' ] = function( test ) {
 
 exports[ 'mapLimit limit equal size' ] = function( test ) {
     var call_order = [];
-    nonsync.mapLimit( [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ], 10, mapIterator.bind( this, call_order ), function( err, results ) {
+    antisync.mapLimit( [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ], 10, mapIterator.bind( this, call_order ), function( err, results ) {
         test.same( call_order, [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ] );
         test.same( results, [ 0, 2, 4, 6, 8, 10, 12, 14, 16, 18 ] );
         test.done();
@@ -1455,7 +1455,7 @@ exports[ 'mapLimit limit equal size' ] = function( test ) {
 
 exports[ 'mapLimit zero limit' ] = function( test ) {
     test.expect( 2 );
-    nonsync.mapLimit( [ 0, 1, 2, 3, 4, 5 ], 0, function( x, callback ) {
+    antisync.mapLimit( [ 0, 1, 2, 3, 4, 5 ], 0, function( x, callback ) {
         test.ok( false, 'iterator should not be called' );
         callback();
     }, function( err, results ) {
@@ -1470,7 +1470,7 @@ exports[ 'mapLimit error' ] = function( test ) {
     var arr = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ];
     var call_order = [];
 
-    nonsync.mapLimit( arr, 3, function( x, callback ) {
+    antisync.mapLimit( arr, 3, function( x, callback ) {
         call_order.push( x );
         if ( x === 2 ) {
             callback( 'error' );
@@ -1485,7 +1485,7 @@ exports[ 'mapLimit error' ] = function( test ) {
 
 exports[ 'reduce' ] = function( test ) {
     var call_order = [];
-    nonsync.reduce( [ 1, 2, 3 ], 0, function( a, x, callback ) {
+    antisync.reduce( [ 1, 2, 3 ], 0, function( a, x, callback ) {
         call_order.push( x );
         callback( null, a + x );
     }, function( err, result ) {
@@ -1495,8 +1495,8 @@ exports[ 'reduce' ] = function( test ) {
     } );
 };
 
-exports[ 'reduce nonsync with non-reference memo' ] = function( test ) {
-    nonsync.reduce( [ 1, 3, 2 ], 0, function( a, x, callback ) {
+exports[ 'reduce antisync with non-reference memo' ] = function( test ) {
+    antisync.reduce( [ 1, 3, 2 ], 0, function( a, x, callback ) {
         setTimeout( function() {
             callback( null, a + x );
         }, Math.random() * 100 );
@@ -1508,7 +1508,7 @@ exports[ 'reduce nonsync with non-reference memo' ] = function( test ) {
 
 exports[ 'reduce error' ] = function( test ) {
     test.expect( 1 );
-    nonsync.reduce( [ 1, 2, 3 ], 0, function( a, x, callback ) {
+    antisync.reduce( [ 1, 2, 3 ], 0, function( a, x, callback ) {
         callback( 'error' );
     }, function( err ) {
         test.equals( err, 'error' );
@@ -1517,19 +1517,19 @@ exports[ 'reduce error' ] = function( test ) {
 };
 
 exports[ 'inject alias' ] = function( test ) {
-    test.equals( nonsync.inject, nonsync.reduce );
+    test.equals( antisync.inject, antisync.reduce );
     test.done();
 };
 
 exports[ 'foldl alias' ] = function( test ) {
-    test.equals( nonsync.foldl, nonsync.reduce );
+    test.equals( antisync.foldl, antisync.reduce );
     test.done();
 };
 
 exports[ 'reduceRight' ] = function( test ) {
     var call_order = [];
     var a = [ 1, 2, 3 ];
-    nonsync.reduceRight( a, 0, function( a, x, callback ) {
+    antisync.reduceRight( a, 0, function( a, x, callback ) {
         call_order.push( x );
         callback( null, a + x );
     }, function( err, result ) {
@@ -1541,12 +1541,12 @@ exports[ 'reduceRight' ] = function( test ) {
 };
 
 exports[ 'foldr alias' ] = function( test ) {
-    test.equals( nonsync.foldr, nonsync.reduceRight );
+    test.equals( antisync.foldr, antisync.reduceRight );
     test.done();
 };
 
 exports[ 'filter' ] = function( test ) {
-    nonsync.filter( [ 3, 1, 2 ], filterIterator, function( results ) {
+    antisync.filter( [ 3, 1, 2 ], filterIterator, function( results ) {
         test.same( results, [ 3, 1 ] );
         test.done();
     } );
@@ -1554,7 +1554,7 @@ exports[ 'filter' ] = function( test ) {
 
 exports[ 'filter original untouched' ] = function( test ) {
     var a = [ 3, 1, 2 ];
-    nonsync.filter( a, function( x, callback ) {
+    antisync.filter( a, function( x, callback ) {
         callback( x % 2 );
     }, function( results ) {
         test.same( results, [ 3, 1 ] );
@@ -1564,24 +1564,24 @@ exports[ 'filter original untouched' ] = function( test ) {
 };
 
 exports[ 'filterSeries' ] = function( test ) {
-    nonsync.filterSeries( [ 3, 1, 2 ], filterIterator, function( results ) {
+    antisync.filterSeries( [ 3, 1, 2 ], filterIterator, function( results ) {
         test.same( results, [ 3, 1 ] );
         test.done();
     } );
 };
 
 exports[ 'select alias' ] = function( test ) {
-    test.equals( nonsync.select, nonsync.filter );
+    test.equals( antisync.select, antisync.filter );
     test.done();
 };
 
 exports[ 'selectSeries alias' ] = function( test ) {
-    test.equals( nonsync.selectSeries, nonsync.filterSeries );
+    test.equals( antisync.selectSeries, antisync.filterSeries );
     test.done();
 };
 
 exports[ 'reject' ] = function( test ) {
-    nonsync.reject( [ 3, 1, 2 ], filterIterator, function( results ) {
+    antisync.reject( [ 3, 1, 2 ], filterIterator, function( results ) {
         test.same( results, [ 2 ] );
         test.done();
     } );
@@ -1589,7 +1589,7 @@ exports[ 'reject' ] = function( test ) {
 
 exports[ 'reject original untouched' ] = function( test ) {
     var a = [ 3, 1, 2 ];
-    nonsync.reject( a, function( x, callback ) {
+    antisync.reject( a, function( x, callback ) {
         callback( x % 2 );
     }, function( results ) {
         test.same( results, [ 2 ] );
@@ -1599,14 +1599,14 @@ exports[ 'reject original untouched' ] = function( test ) {
 };
 
 exports[ 'rejectSeries' ] = function( test ) {
-    nonsync.rejectSeries( [ 3, 1, 2 ], filterIterator, function( results ) {
+    antisync.rejectSeries( [ 3, 1, 2 ], filterIterator, function( results ) {
         test.same( results, [ 2 ] );
         test.done();
     } );
 };
 
 exports[ 'some true' ] = function( test ) {
-    nonsync.some( [ 3, 1, 2 ], function( x, callback ) {
+    antisync.some( [ 3, 1, 2 ], function( x, callback ) {
         setTimeout( function() {
             callback( x === 1 );
         }, 0 );
@@ -1617,7 +1617,7 @@ exports[ 'some true' ] = function( test ) {
 };
 
 exports[ 'some false' ] = function( test ) {
-    nonsync.some( [ 3, 1, 2 ], function( x, callback ) {
+    antisync.some( [ 3, 1, 2 ], function( x, callback ) {
         setTimeout( function() {
             callback( x === 10 );
         }, 0 );
@@ -1629,7 +1629,7 @@ exports[ 'some false' ] = function( test ) {
 
 exports[ 'some early return' ] = function( test ) {
     var call_order = [];
-    nonsync.some( [ 1, 2, 3 ], function( x, callback ) {
+    antisync.some( [ 1, 2, 3 ], function( x, callback ) {
         setTimeout( function() {
             call_order.push( x );
             callback( x === 1 );
@@ -1644,12 +1644,12 @@ exports[ 'some early return' ] = function( test ) {
 };
 
 exports[ 'any alias' ] = function( test ) {
-    test.equals( nonsync.any, nonsync.some );
+    test.equals( antisync.any, antisync.some );
     test.done();
 };
 
 exports[ 'every true' ] = function( test ) {
-    nonsync.every( [ 1, 2, 3 ], function( x, callback ) {
+    antisync.every( [ 1, 2, 3 ], function( x, callback ) {
         setTimeout( function() {
             callback( true );
         }, 0 );
@@ -1660,7 +1660,7 @@ exports[ 'every true' ] = function( test ) {
 };
 
 exports[ 'every false' ] = function( test ) {
-    nonsync.every( [ 1, 2, 3 ], function( x, callback ) {
+    antisync.every( [ 1, 2, 3 ], function( x, callback ) {
         setTimeout( function() {
             callback( x % 2 );
         }, 0 );
@@ -1672,7 +1672,7 @@ exports[ 'every false' ] = function( test ) {
 
 exports[ 'every early return' ] = function( test ) {
     var call_order = [];
-    nonsync.every( [ 1, 2, 3 ], function( x, callback ) {
+    antisync.every( [ 1, 2, 3 ], function( x, callback ) {
         setTimeout( function() {
             call_order.push( x );
             callback( x === 1 );
@@ -1687,13 +1687,13 @@ exports[ 'every early return' ] = function( test ) {
 };
 
 exports[ 'all alias' ] = function( test ) {
-    test.equals( nonsync.all, nonsync.every );
+    test.equals( antisync.all, antisync.every );
     test.done();
 };
 
 exports[ 'detect' ] = function( test ) {
     var call_order = [];
-    nonsync.detect( [ 3, 2, 1 ], detectIterator.bind( this, call_order ), function( result ) {
+    antisync.detect( [ 3, 2, 1 ], detectIterator.bind( this, call_order ), function( result ) {
         call_order.push( 'callback' );
         test.equals( result, 2 );
     } );
@@ -1705,7 +1705,7 @@ exports[ 'detect' ] = function( test ) {
 
 exports[ 'detect - mulitple matches' ] = function( test ) {
     var call_order = [];
-    nonsync.detect( [ 3, 2, 2, 1, 2 ], detectIterator.bind( this, call_order ), function( result ) {
+    antisync.detect( [ 3, 2, 2, 1, 2 ], detectIterator.bind( this, call_order ), function( result ) {
         call_order.push( 'callback' );
         test.equals( result, 2 );
     } );
@@ -1717,7 +1717,7 @@ exports[ 'detect - mulitple matches' ] = function( test ) {
 
 exports[ 'detectSeries' ] = function( test ) {
     var call_order = [];
-    nonsync.detectSeries( [ 3, 2, 1 ], detectIterator.bind( this, call_order ), function( result ) {
+    antisync.detectSeries( [ 3, 2, 1 ], detectIterator.bind( this, call_order ), function( result ) {
         call_order.push( 'callback' );
         test.equals( result, 2 );
     } );
@@ -1729,7 +1729,7 @@ exports[ 'detectSeries' ] = function( test ) {
 
 exports[ 'detectSeries - multiple matches' ] = function( test ) {
     var call_order = [];
-    nonsync.detectSeries( [ 3, 2, 2, 1, 2 ], detectIterator.bind( this, call_order ), function( result ) {
+    antisync.detectSeries( [ 3, 2, 2, 1, 2 ], detectIterator.bind( this, call_order ), function( result ) {
         call_order.push( 'callback' );
         test.equals( result, 2 );
     } );
@@ -1740,7 +1740,7 @@ exports[ 'detectSeries - multiple matches' ] = function( test ) {
 };
 
 exports[ 'sortBy' ] = function( test ) {
-    nonsync.sortBy( [ {
+    antisync.sortBy( [ {
         a: 1
     }, {
         a: 15
@@ -1763,7 +1763,7 @@ exports[ 'sortBy' ] = function( test ) {
 };
 
 exports[ 'sortBy inverted' ] = function( test ) {
-    nonsync.sortBy( [ {
+    antisync.sortBy( [ {
         a: 1
     }, {
         a: 15
@@ -1790,13 +1790,13 @@ exports[ 'apply' ] = function( test ) {
     var fn = function() {
         test.same( Array.prototype.slice.call( arguments ), [ 1, 2, 3, 4 ] );
     };
-    nonsync.apply( fn, 1, 2, 3, 4 )();
-    nonsync.apply( fn, 1, 2, 3 )( 4 );
-    nonsync.apply( fn, 1, 2 )( 3, 4 );
-    nonsync.apply( fn, 1 )( 2, 3, 4 );
-    nonsync.apply( fn )( 1, 2, 3, 4 );
+    antisync.apply( fn, 1, 2, 3, 4 )();
+    antisync.apply( fn, 1, 2, 3 )( 4 );
+    antisync.apply( fn, 1, 2 )( 3, 4 );
+    antisync.apply( fn, 1 )( 2, 3, 4 );
+    antisync.apply( fn )( 1, 2, 3, 4 );
     test.equals(
-        nonsync.apply( function( name ) {
+        antisync.apply( function( name ) {
             return 'hello ' + name;
         }, 'world' )(),
         'hello world'
@@ -1805,7 +1805,7 @@ exports[ 'apply' ] = function( test ) {
 };
 
 
-// generates tests for console functions such as nonsync.log
+// generates tests for console functions such as antisync.log
 var console_fn_tests = function( name ) {
 
     if ( typeof console !== 'undefined' ) {
@@ -1834,9 +1834,9 @@ var console_fn_tests = function( name ) {
                     console.error = _error;
                     test.done();
                 };
-                nonsync[ name ]( fn_err, 'one' );
+                antisync[ name ]( fn_err, 'one' );
             };
-            nonsync[ name ]( fn, 'one' );
+            antisync[ name ]( fn, 'one' );
         };
 
         exports[ name + ' with multiple result params' ] = function( test ) {
@@ -1848,7 +1848,7 @@ var console_fn_tests = function( name ) {
             console[ name ] = function( x ) {
                 called_with.push( x );
             };
-            nonsync[ name ]( fn );
+            antisync[ name ]( fn );
             test.same( called_with, [ 'one', 'two', 'three' ] );
             console[ name ] = _console_fn;
             test.done();
@@ -1866,8 +1866,8 @@ var console_fn_tests = function( name ) {
             var fn_err = function( callback ) {
                 callback( 'error' );
             };
-            nonsync[ name ]( fn );
-            nonsync[ name ]( fn_err );
+            antisync[ name ]( fn );
+            antisync[ name ]( fn_err );
             window.console = _console;
         }
         test.done();
@@ -1878,7 +1878,7 @@ var console_fn_tests = function( name ) {
 
 
 exports[ 'times' ] = function( test ) {
-    nonsync.times( 5, function( n, next ) {
+    antisync.times( 5, function( n, next ) {
         next( null, n );
     }, function( err, results ) {
         test.same( results, [ 0, 1, 2, 3, 4 ] );
@@ -1888,7 +1888,7 @@ exports[ 'times' ] = function( test ) {
 
 exports[ 'times' ] = function( test ) {
     var args = [];
-    nonsync.times( 3, function( n, callback ) {
+    antisync.times( 3, function( n, callback ) {
         setTimeout( function() {
             args.push( n );
             callback();
@@ -1901,7 +1901,7 @@ exports[ 'times' ] = function( test ) {
 
 exports[ 'times 0' ] = function( test ) {
     test.expect( 1 );
-    nonsync.times( 0, function( n, callback ) {
+    antisync.times( 0, function( n, callback ) {
         test.ok( false, 'iterator should not be called' );
         callback();
     }, function() {
@@ -1912,7 +1912,7 @@ exports[ 'times 0' ] = function( test ) {
 
 exports[ 'times error' ] = function( test ) {
     test.expect( 1 );
-    nonsync.times( 3, function( n, callback ) {
+    antisync.times( 3, function( n, callback ) {
         callback( 'error' );
     }, function( err ) {
         test.equals( err, 'error' );
@@ -1922,7 +1922,7 @@ exports[ 'times error' ] = function( test ) {
 
 exports[ 'timesSeries' ] = function( test ) {
     var call_order = [];
-    nonsync.timesSeries( 5, function( n, callback ) {
+    antisync.timesSeries( 5, function( n, callback ) {
         setTimeout( function() {
             call_order.push( n );
             callback( null, n );
@@ -1936,7 +1936,7 @@ exports[ 'timesSeries' ] = function( test ) {
 
 exports[ 'timesSeries error' ] = function( test ) {
     test.expect( 1 );
-    nonsync.timesSeries( 5, function( n, callback ) {
+    antisync.timesSeries( 5, function( n, callback ) {
         callback( 'error' );
     }, function( err ) {
         test.equals( err, 'error' );
@@ -1952,7 +1952,7 @@ console_fn_tests('error');*/
 
 exports[ 'nextTick' ] = function( test ) {
     var call_order = [];
-    nonsync.nextTick( function() {
+    antisync.nextTick( function() {
         call_order.push( 'two' );
     } );
     call_order.push( 'one' );
@@ -1970,7 +1970,7 @@ exports[ 'nextTick in the browser' ] = function( test ) {
     test.expect( 1 );
 
     var call_order = [];
-    nonsync.nextTick( function() {
+    antisync.nextTick( function() {
         call_order.push( 'two' );
     } );
 
@@ -1994,7 +1994,7 @@ exports[ 'concat' ] = function( test ) {
             cb( null, r );
         }, x * 25 );
     };
-    nonsync.concat( [ 1, 3, 2 ], iterator, function( err, results ) {
+    antisync.concat( [ 1, 3, 2 ], iterator, function( err, results ) {
         test.same( results, [ 1, 2, 1, 3, 2, 1 ] );
         test.same( call_order, [ 1, 2, 3 ] );
         test.ok( !err );
@@ -2006,7 +2006,7 @@ exports[ 'concat error' ] = function( test ) {
     var iterator = function( x, cb ) {
         cb( new Error( 'test error' ) );
     };
-    nonsync.concat( [ 1, 2, 3 ], iterator, function( err ) {
+    antisync.concat( [ 1, 2, 3 ], iterator, function( err ) {
         test.ok( err );
         test.done();
     } );
@@ -2025,7 +2025,7 @@ exports[ 'concatSeries' ] = function( test ) {
             cb( null, r );
         }, x * 25 );
     };
-    nonsync.concatSeries( [ 1, 3, 2 ], iterator, function( err, results ) {
+    antisync.concatSeries( [ 1, 3, 2 ], iterator, function( err, results ) {
         test.same( results, [ 1, 3, 2, 1, 2, 1 ] );
         test.same( call_order, [ 1, 3, 2 ] );
         test.ok( !err );
@@ -2037,7 +2037,7 @@ exports[ 'until' ] = function( test ) {
     var call_order = [];
 
     var count = 0;
-    nonsync.until(
+    antisync.until(
         function() {
             call_order.push( [ 'test', count ] );
             return ( count == 5 );
@@ -2070,7 +2070,7 @@ exports[ 'until' ] = function( test ) {
 exports[ 'doUntil' ] = function( test ) {
     var call_order = [];
     var count = 0;
-    nonsync.doUntil(
+    antisync.doUntil(
         function( cb ) {
             call_order.push( [ 'iterator', count ] );
             count++;
@@ -2102,7 +2102,7 @@ exports[ 'doUntil' ] = function( test ) {
 exports[ 'doUntil callback params' ] = function( test ) {
     var call_order = [];
     var count = 0;
-    nonsync.doUntil(
+    antisync.doUntil(
         function( cb ) {
             call_order.push( [ 'iterator', count ] );
             count++;
@@ -2135,7 +2135,7 @@ exports[ 'whilst' ] = function( test ) {
     var call_order = [];
 
     var count = 0;
-    nonsync.whilst(
+    antisync.whilst(
         function() {
             call_order.push( [ 'test', count ] );
             return ( count < 5 );
@@ -2169,7 +2169,7 @@ exports[ 'doWhilst' ] = function( test ) {
     var call_order = [];
 
     var count = 0;
-    nonsync.doWhilst(
+    antisync.doWhilst(
         function( cb ) {
             call_order.push( [ 'iterator', count ] );
             count++;
@@ -2202,7 +2202,7 @@ exports[ 'doWhilst callback params' ] = function( test ) {
     var call_order = [];
 
     var count = 0;
-    nonsync.doWhilst(
+    antisync.doWhilst(
         function( cb ) {
             call_order.push( [ 'iterator', count ] );
             count++;
@@ -2239,7 +2239,7 @@ exports[ 'queue' ] = function( test ) {
     // worker2: -2---3
     // order of completion: 2,1,4,3
 
-    var q = nonsync.queue( function( task, callback ) {
+    var q = antisync.queue( function( task, callback ) {
         setTimeout( function() {
             call_order.push( 'process ' + task );
             callback( 'error', 'arg' );
@@ -2292,7 +2292,7 @@ exports[ 'queue default concurrency' ] = function( test ) {
 
     // order of completion: 1,2,3,4
 
-    var q = nonsync.queue( function( task, callback ) {
+    var q = antisync.queue( function( task, callback ) {
         setTimeout( function() {
             call_order.push( 'process ' + task );
             callback( 'error', 'arg' );
@@ -2342,7 +2342,7 @@ exports[ 'queue default concurrency' ] = function( test ) {
 exports[ 'queue error propagation' ] = function( test ) {
     var results = [];
 
-    var q = nonsync.queue( function( task, callback ) {
+    var q = antisync.queue( function( task, callback ) {
         callback( task.name === 'foo' ? new Error( 'fooError' ) : null );
     }, 2 );
 
@@ -2381,7 +2381,7 @@ exports[ 'queue changing concurrency' ] = function( test ) {
     // worker1: --1-2---3-4
     // order of completion: 1,2,3,4
 
-    var q = nonsync.queue( function( task, callback ) {
+    var q = antisync.queue( function( task, callback ) {
         setTimeout( function() {
             call_order.push( 'process ' + task );
             callback( 'error', 'arg' );
@@ -2437,7 +2437,7 @@ exports[ 'queue push without callback' ] = function( test ) {
     // worker2: -2---3
     // order of completion: 2,1,4,3
 
-    var q = nonsync.queue( function( task, callback ) {
+    var q = antisync.queue( function( task, callback ) {
         setTimeout( function() {
             call_order.push( 'process ' + task );
             callback( 'error', 'arg' );
@@ -2463,7 +2463,7 @@ exports[ 'queue push without callback' ] = function( test ) {
 exports[ 'queue unshift' ] = function( test ) {
     var queue_order = [];
 
-    var q = nonsync.queue( function( task, callback ) {
+    var q = antisync.queue( function( task, callback ) {
         queue_order.push( task );
         callback();
     }, 1 );
@@ -2480,7 +2480,7 @@ exports[ 'queue unshift' ] = function( test ) {
 };
 
 exports[ 'queue too many callbacks' ] = function( test ) {
-    var q = nonsync.queue( function( task, callback ) {
+    var q = antisync.queue( function( task, callback ) {
         callback();
         test.throws( function() {
             callback();
@@ -2499,7 +2499,7 @@ exports[ 'queue bulk task' ] = function( test ) {
     // worker2: -2---3
     // order of completion: 2,1,4,3
 
-    var q = nonsync.queue( function( task, callback ) {
+    var q = antisync.queue( function( task, callback ) {
         setTimeout( function() {
             call_order.push( 'process ' + task );
             callback( 'error', task );
@@ -2528,7 +2528,7 @@ exports[ 'queue bulk task' ] = function( test ) {
 };
 
 exports[ 'queue idle' ] = function( test ) {
-    var q = nonsync.queue( function( task, callback ) {
+    var q = antisync.queue( function( task, callback ) {
         // Queue is busy when workers are running
         test.equal( q.idle(), false );
         callback();
@@ -2566,7 +2566,7 @@ exports[ 'queue pause' ] = function( test ) {
             };
         } )();
 
-    var q = nonsync.queue( function( task, callback ) {
+    var q = antisync.queue( function( task, callback ) {
         call_order.push( 'process ' + task );
         call_order.push( 'timeout ' + elapsed() );
         callback();
@@ -2621,7 +2621,7 @@ exports[ 'queue pause with concurrency' ] = function( test ) {
             };
         } )();
 
-    var q = nonsync.queue( function( task, callback ) {
+    var q = antisync.queue( function( task, callback ) {
         setTimeout( function() {
             call_order.push( 'process ' + task );
             call_order.push( 'timeout ' + elapsed() );
@@ -2655,7 +2655,7 @@ exports[ 'queue pause with concurrency' ] = function( test ) {
 };
 
 exports[ 'queue kill' ] = function( test ) {
-    var q = nonsync.queue( function( task, callback ) {
+    var q = antisync.queue( function( task, callback ) {
         setTimeout( function() {
             test.ok( false, "Function should never be called" );
             callback();
@@ -2680,7 +2680,7 @@ exports[ 'priorityQueue' ] = function( test ) {
 
     // order of completion: 2,1,4,3
 
-    var q = nonsync.priorityQueue( function( task, callback ) {
+    var q = antisync.priorityQueue( function( task, callback ) {
         call_order.push( 'process ' + task );
         callback( 'error', 'arg' );
     }, 1 );
@@ -2733,7 +2733,7 @@ exports[ 'priorityQueue concurrency' ] = function( test ) {
     // worker2: -1---4
     // order of completion: 1,2,3,4
 
-    var q = nonsync.priorityQueue( function( task, callback ) {
+    var q = antisync.priorityQueue( function( task, callback ) {
         setTimeout( function() {
             call_order.push( 'process ' + task );
             callback( 'error', 'arg' );
@@ -2787,7 +2787,7 @@ exports[ 'cargo' ] = function( test ) {
     // worker: --12--34--5-
     // order of completion: 1,2,3,4,5
 
-    var c = nonsync.cargo( function( tasks, callback ) {
+    var c = antisync.cargo( function( tasks, callback ) {
         setTimeout( function() {
             call_order.push( 'process ' + tasks.join( ' ' ) );
             callback( 'error', 'arg' );
@@ -2853,7 +2853,7 @@ exports[ 'cargo without callback' ] = function( test ) {
     // worker: --1-2---34-5-
     // order of completion: 1,2,3,4,5
 
-    var c = nonsync.cargo( function( tasks, callback ) {
+    var c = antisync.cargo( function( tasks, callback ) {
         setTimeout( function() {
             call_order.push( 'process ' + tasks.join( ' ' ) );
             callback( 'error', 'arg' );
@@ -2889,7 +2889,7 @@ exports[ 'cargo bulk task' ] = function( test ) {
     // worker: -123-4-
     // order of completion: 1,2,3,4
 
-    var c = nonsync.cargo( function( tasks, callback ) {
+    var c = antisync.cargo( function( tasks, callback ) {
         setTimeout( function() {
             call_order.push( 'process ' + tasks.join( ' ' ) );
             callback( 'error', tasks.join( ' ' ) );
@@ -2916,7 +2916,7 @@ exports[ 'cargo bulk task' ] = function( test ) {
 
 exports[ 'cargo drain once' ] = function( test ) {
 
-    var c = nonsync.cargo( function( tasks, callback ) {
+    var c = antisync.cargo( function( tasks, callback ) {
         callback();
     }, 3 );
 
@@ -2937,7 +2937,7 @@ exports[ 'cargo drain once' ] = function( test ) {
 
 exports[ 'cargo drain twice' ] = function( test ) {
 
-    var c = nonsync.cargo( function( tasks, callback ) {
+    var c = antisync.cargo( function( tasks, callback ) {
         callback();
     }, 3 );
 
@@ -2966,13 +2966,13 @@ exports[ 'memoize' ] = function( test ) {
     var call_order = [];
 
     var fn = function( arg1, arg2, callback ) {
-        nonsync.setImmediate( function() {
+        antisync.setImmediate( function() {
             call_order.push( [ 'fn', arg1, arg2 ] );
             callback( null, arg1 + arg2 );
         } );
     };
 
-    var fn2 = nonsync.memoize( fn );
+    var fn2 = antisync.memoize( fn );
     fn2( 1, 2, function( err, result ) {
         test.equal( result, 3 );
         fn2( 1, 2, function( err, result ) {
@@ -2989,24 +2989,24 @@ exports[ 'memoize' ] = function( test ) {
     } );
 };
 
-exports[ 'memoize maintains nonsynchrony' ] = function( test ) {
+exports[ 'memoize maintains antisynchrony' ] = function( test ) {
     test.expect( 3 );
     var call_order = [];
 
     var fn = function( arg1, arg2, callback ) {
         call_order.push( [ 'fn', arg1, arg2 ] );
-        nonsync.setImmediate( function() {
+        antisync.setImmediate( function() {
             call_order.push( [ 'cb', arg1, arg2 ] );
             callback( null, arg1 + arg2 );
         } );
     };
 
-    var fn2 = nonsync.memoize( fn );
+    var fn2 = antisync.memoize( fn );
     fn2( 1, 2, function( err, result ) {
         test.equal( result, 3 );
         fn2( 1, 2, function( err, result ) {
             test.equal( result, 3 );
-            nonsync.nextTick( memoize_done );
+            antisync.nextTick( memoize_done );
             call_order.push( 'tick3' );
         } );
         call_order.push( 'tick2' );
@@ -3014,16 +3014,16 @@ exports[ 'memoize maintains nonsynchrony' ] = function( test ) {
     call_order.push( 'tick1' );
 
     function memoize_done() {
-        var nonsync_call_order = [
-            [ 'fn', 1, 2 ], // initial nonsync call
-            'tick1', // nonsync caller
-            [ 'cb', 1, 2 ], // nonsync callback
-            //  ['fn',1,2], // memoized // memoized nonsync body
-            'tick2', // handler for first nonsync call
-            //  ['cb',1,2], // memoized // memoized nonsync response body
-            'tick3' // handler for memoized nonsync call
+        var antisync_call_order = [
+            [ 'fn', 1, 2 ], // initial antisync call
+            'tick1', // antisync caller
+            [ 'cb', 1, 2 ], // antisync callback
+            //  ['fn',1,2], // memoized // memoized antisync body
+            'tick2', // handler for first antisync call
+            //  ['cb',1,2], // memoized // memoized antisync response body
+            'tick3' // handler for memoized antisync call
         ];
-        test.same( call_order, nonsync_call_order );
+        test.same( call_order, antisync_call_order );
         test.done();
     }
 };
@@ -3034,13 +3034,13 @@ exports[ 'unmemoize' ] = function( test ) {
 
     var fn = function( arg1, arg2, callback ) {
         call_order.push( [ 'fn', arg1, arg2 ] );
-        nonsync.setImmediate( function() {
+        antisync.setImmediate( function() {
             callback( null, arg1 + arg2 );
         } );
     };
 
-    var fn2 = nonsync.memoize( fn );
-    var fn3 = nonsync.unmemoize( fn2 );
+    var fn2 = antisync.memoize( fn );
+    var fn3 = antisync.unmemoize( fn2 );
     fn3( 1, 2, function( err, result ) {
         test.equal( result, 3 );
         fn3( 1, 2, function( err, result ) {
@@ -3065,7 +3065,7 @@ exports[ 'unmemoize a not memoized function' ] = function( test ) {
         callback( null, arg1 + arg2 );
     };
 
-    var fn2 = nonsync.unmemoize( fn );
+    var fn2 = antisync.unmemoize( fn );
     fn2( 1, 2, function( err, result ) {
         test.equal( result, 3 );
     } );
@@ -3079,7 +3079,7 @@ exports[ 'memoize error' ] = function( test ) {
     var fn = function( arg1, arg2, callback ) {
         callback( testerr, arg1 + arg2 );
     };
-    nonsync.memoize( fn )( 1, 2, function( err ) {
+    antisync.memoize( fn )( 1, 2, function( err ) {
         test.equal( err, testerr );
     } );
     test.done();
@@ -3093,7 +3093,7 @@ exports[ 'memoize multiple calls' ] = function( test ) {
             callback( null, arg1, arg2 );
         }, 10 );
     };
-    var fn2 = nonsync.memoize( fn );
+    var fn2 = antisync.memoize( fn );
     fn2( 1, 2, function( err, result ) {
         test.equal( result, 1, 2 );
     } );
@@ -3110,7 +3110,7 @@ exports[ 'memoize custom hash function' ] = function( test ) {
     var fn = function( arg1, arg2, callback ) {
         callback( testerr, arg1 + arg2 );
     };
-    var fn2 = nonsync.memoize( fn, function() {
+    var fn2 = antisync.memoize( fn, function() {
         return 'custom hash';
     } );
     fn2( 1, 2, function( err, result ) {
@@ -3124,7 +3124,7 @@ exports[ 'memoize custom hash function' ] = function( test ) {
 
 exports[ 'memoize manually added memo value' ] = function( test ) {
     test.expect( 1 );
-    var fn = nonsync.memoize( function() {
+    var fn = antisync.memoize( function() {
         test( false, "Function should never be called" );
     } );
     fn.memo[ "foo" ] = [ "bar" ];
@@ -3134,32 +3134,32 @@ exports[ 'memoize manually added memo value' ] = function( test ) {
     } );
 };
 
-// Issue 10 on github: https://github.com/caolan/nonsync/issues#issue/10
+// Issue 10 on github: https://github.com/caolan/async/issues#issue/10
 exports[ 'falsy return values in series' ] = function( test ) {
     function taskFalse( callback ) {
-        nonsync.nextTick( function() {
+        antisync.nextTick( function() {
             callback( null, false );
         } );
     }
 
     function taskUndefined( callback ) {
-        nonsync.nextTick( function() {
+        antisync.nextTick( function() {
             callback( null, undefined );
         } );
     }
 
     function taskEmpty( callback ) {
-        nonsync.nextTick( function() {
+        antisync.nextTick( function() {
             callback( null );
         } );
     }
 
     function taskNull( callback ) {
-        nonsync.nextTick( function() {
+        antisync.nextTick( function() {
             callback( null, null );
         } );
     }
-    nonsync.series(
+    antisync.series(
         [ taskFalse, taskUndefined, taskEmpty, taskNull ],
         function( err, results ) {
             test.equal( results.length, 4 );
@@ -3172,32 +3172,32 @@ exports[ 'falsy return values in series' ] = function( test ) {
     );
 };
 
-// Issue 10 on github: https://github.com/caolan/nonsync/issues#issue/10
+// Issue 10 on github: https://github.com/caolan/async/issues#issue/10
 exports[ 'falsy return values in parallel' ] = function( test ) {
     function taskFalse( callback ) {
-        nonsync.nextTick( function() {
+        antisync.nextTick( function() {
             callback( null, false );
         } );
     }
 
     function taskUndefined( callback ) {
-        nonsync.nextTick( function() {
+        antisync.nextTick( function() {
             callback( null, undefined );
         } );
     }
 
     function taskEmpty( callback ) {
-        nonsync.nextTick( function() {
+        antisync.nextTick( function() {
             callback( null );
         } );
     }
 
     function taskNull( callback ) {
-        nonsync.nextTick( function() {
+        antisync.nextTick( function() {
             callback( null, null );
         } );
     }
-    nonsync.parallel(
+    antisync.parallel(
         [ taskFalse, taskUndefined, taskEmpty, taskNull ],
         function( err, results ) {
             test.equal( results.length, 4 );
@@ -3212,10 +3212,10 @@ exports[ 'falsy return values in parallel' ] = function( test ) {
 
 exports[ 'queue events' ] = function( test ) {
     var calls = [];
-    var q = nonsync.queue( function( task, cb ) {
+    var q = antisync.queue( function( task, cb ) {
         // nop
         calls.push( 'process ' + task );
-        nonsync.setImmediate( cb );
+        antisync.setImmediate( cb );
     }, 10 );
     q.concurrency = 3;
 
@@ -3269,10 +3269,10 @@ exports[ 'queue events' ] = function( test ) {
 
 exports[ 'queue empty' ] = function( test ) {
     var calls = [];
-    var q = nonsync.queue( function( task, cb ) {
+    var q = antisync.queue( function( task, cb ) {
         // nop
         calls.push( 'process ' + task );
-        nonsync.setImmediate( cb );
+        antisync.setImmediate( cb );
     }, 3 );
 
     q.drain = function() {
@@ -3291,7 +3291,7 @@ exports[ 'queue empty' ] = function( test ) {
 
 exports[ 'queue started' ] = function( test ) {
 
-    var q = nonsync.queue( function() {} );
+    var q = antisync.queue( function() {} );
 
     test.equal( q.started, false );
     q.push( [] );
