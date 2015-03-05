@@ -1,7 +1,21 @@
-# Async.js
+# nonsync.js
 
-[![Build Status via Travis CI](https://travis-ci.org/caolan/async.svg?branch=master)](https://travis-ci.org/caolan/async)
+[![Build Status via Travis CI](https://travis-ci.org/andyburke/nonsync.svg?branch=master)](https://travis-ci.org/andyburke/nonsync)
 
+## WARNING
+
+** nonsync is an experimental fork of [async](https://github.com/caolan/async) **
+
+The intents are:
+
+1) Make it easier to only include certain parts of the library, reducing
+browserify bloat.
+
+2) Unapologetically focus on node/browserify (in preference to bower, etc.)
+
+** BELOW THIS POINT, THE DOCS HAVE NOT BEEN UPDATED **
+
+## Summary
 
 Async is a utility module which provides straight-forward, powerful functions
 for working with asynchronous JavaScript. Although originally designed for

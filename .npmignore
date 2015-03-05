@@ -2,6 +2,8 @@ deps
 dist
 test
 nodelint.cfg
+.jshintrc
+.jsbeautifyrc
 .npmignore
 .gitmodules
 Makefile
