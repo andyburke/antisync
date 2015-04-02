@@ -35,7 +35,7 @@ utils.reduce = function reduce( arr, iterator, memo ) {
     return memo;
 };
 
-utils.keys = function keys( obj ) {
+utils.keys = function keys( obj ) {
     if ( Object.keys ) {
         return Object.keys( obj );
     }

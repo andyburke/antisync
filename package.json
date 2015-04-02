@@ -25,12 +25,14 @@
     "url": "https://github.com/andyburke/antisync/raw/master/LICENSE"
   },
   "devDependencies": {
+    "browserify": "^9.0.4",
     "nodeunit": ">0.0.0",
     "uglify-js": "1.2.x",
     "nodelint": ">0.0.0",
     "lodash": ">=2.4.1"
   },
   "scripts": {
+    "prepublish": "mkdir -p lib; browserify --standalone async index.js > lib/async.js",
     "test": "nodeunit test/test-async.js"
   }
 }
